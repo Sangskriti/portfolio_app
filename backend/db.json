@@ -1,0 +1,146 @@
+{
+  "profiles": [
+    {
+      "hero": {
+        "name": "",
+        "title": "",
+        "tagline": "",
+        "imageUrl": ""
+      },
+      "about": {
+        "bio": "",
+        "email": "",
+        "phone": "",
+        "location": "",
+        "socials": ""
+      },
+      "skills": [],
+      "services": [
+        {
+          "title": "",
+          "description": ""
+        },
+        {
+          "title": "",
+          "description": ""
+        },
+        {
+          "title": "",
+          "description": ""
+        }
+      ],
+      "portfolio": [
+        {
+          "title": "",
+          "imageUrl": "",
+          "description": ""
+        },
+        {
+          "title": "",
+          "imageUrl": "",
+          "description": ""
+        },
+        {
+          "title": "",
+          "imageUrl": "",
+          "description": ""
+        }
+      ],
+      "testimonials": [
+        {
+          "client": "",
+          "quote": ""
+        }
+      ],
+      "blog": {
+        "title": "",
+        "summary": ""
+      },
+      "contact": {
+        "messageText": "",
+        "email": "",
+        "phone": ""
+      },
+      "template": "template-2",
+      "id": "87369daf-af4a-462a-840b-1e846dccb6a5",
+      "createdAt": "2025-10-28T07:52:58.271Z"
+    }
+  ],
+  "portfolios": [
+    {
+      "id": "mHQ5P-uU6j",
+      "createdAt": 1761646762810,
+      "template": "template1",
+      "name": "vvcbnnvmjm",
+      "title": "bvmvnmvnmv",
+      "tagline": "nvvmvmvm",
+      "profileImage": "",
+      "bio": "   bnbnbnbn",
+      "email": "xghc@gmail.com",
+      "phone": "8547120369",
+      "location": "cnchvh",
+      "socials": {
+        "twitter": "",
+        "linkedin": "",
+        "website": ""
+      },
+      "skills": [
+        "bncnvn",
+        "bnvnvnv"
+      ],
+      "services": [
+        {
+          "id": "029e8488-e92f-4d13-9f21-65f7d2a13b23",
+          "title": "ncbncbbbc",
+          "desc": "vvcbcbncnn"
+        },
+        {
+          "id": "c7b10e0b-2499-416d-9300-020ba8a23a50",
+          "title": "bnbbnnnmmn",
+          "desc": "  nvnvnnn"
+        },
+        {
+          "id": "f1321221-0044-48aa-b1c1-2d9e9336695b",
+          "title": "b vnmnmn",
+          "desc": " vnvnmnmvmn"
+        }
+      ],
+      "projects": [
+        {
+          "id": "b094cb2e-df1a-4343-bbf4-8d1db1baab15",
+          "title": " bbnnbb",
+          "image": "",
+          "desc": " bvnvn "
+        },
+        {
+          "id": "611dae09-de58-493d-8618-0a75b53299a3",
+          "title": "bnbvnvnn",
+          "image": "",
+          "desc": "nvvnvmn"
+        },
+        {
+          "id": "b2b1bedc-7bb3-4f49-9d1f-3bbc09462a10",
+          "title": "mnvmv,",
+          "image": "",
+          "desc": "nbbvnnvmnmn"
+        }
+      ],
+      "testimonials": [
+        {
+          "id": "86fdd272-419c-4a24-a259-7a46fd51dd5f",
+          "name": "bbcbbnb",
+          "quote": "  ncnnhvn"
+        }
+      ],
+      "blog": {
+        "title": "  bn vhm",
+        "summary": "bnvbnvhmv"
+      },
+      "contact": {
+        "message": "bnvvbnnn",
+        "email": " vvbb@gmai.com",
+        "phone": "8569741203"
+      }
+    }
+  ]
+}
