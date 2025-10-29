@@ -2,8 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const templates = [
-  { id: 'template1', name: 'Template 1', subtitle: 'Yellow hero, clean single-column' , img: 'https://i.imgur.com/7KQ9g8G.jpg' },
-  { id: 'template2', name: 'Template 2', subtitle: 'Split hero, timeline & masonry' , img: 'https://i.imgur.com/3vQvKqC.jpg' }
+  { id: 'template1', name: 'Template 1', subtitle: 'Yellow hero, clean single-column' , img: '/plot_photo.jpg' },
+  { id: 'template2', name: 'Template 2', subtitle: 'Split hero, timeline & masonry' , img: '/plot_images.jpg' }
 ];
 
 export default function TemplateSelection(){
