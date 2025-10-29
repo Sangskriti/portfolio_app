@@ -25,6 +25,7 @@ export default function App(){
           <Route path="/create/:template" element={<MultiStepForm />} />
           <Route path="/list" element={<ProfessionalsList />} />
           <Route path="/portfolio/:id" element={<PortfolioPage />} />
+          <Route path="/edit/:id" element={<MultiStepForm />} />
         </Routes>
       </main>
     </div>

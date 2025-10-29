@@ -19,9 +19,17 @@ const empty = {
   // Skills
   skills: [],
   // Services (3)
-  services: [{ id: uuidv4(), title:'', desc:'' },{ id: uuidv4(), title:'', desc:'' },{ id: uuidv4(), title:'', desc:'' }],
+  services: [
+    { id: uuidv4(), title:'', desc:'' },
+    { id: uuidv4(), title:'', desc:'' },
+    { id: uuidv4(), title:'', desc:'' }
+  ],
   // Portfolio (3)
-  projects: [{ id: uuidv4(), title:'', image:'', desc:'' },{ id: uuidv4(), title:'', image:'', desc:'' },{ id: uuidv4(), title:'', image:'', desc:'' }],
+  projects: [
+    { id: uuidv4(), title:'', image:'', desc:'' },
+    { id: uuidv4(), title:'', image:'', desc:'' },
+    { id: uuidv4(), title:'', image:'', desc:'' }
+  ],
   // Testimonials
   testimonials: [{ id: uuidv4(), name:'', quote:'' }],
   // Blog (optional)
@@ -31,24 +39,39 @@ const empty = {
 };
 
 function readFileAsDataURL(file) {
-  return new Promise((res, rej)=>{
+  return new Promise((res, rej) => {
     const fr = new FileReader();
-    fr.onload = ()=>res(fr.result);
+    fr.onload = () => res(fr.result);
     fr.onerror = rej;
     fr.readAsDataURL(file);
   });
 }
 
-export default function MultiStepForm(){
+export default function MultiStepForm() {
   const nav = useNavigate();
-  const { template } = useParams();
+  const { template, id } = useParams(); // added id param for edit mode
   const [data, setData] = useState({...empty, template: template || 'template1'});
   const [step, setStep] = useState(0);
   const steps = ['Basic', 'About', 'Skills', 'Services', 'Portfolio', 'Testimonials', 'Blog', 'Contact'];
 
-  useEffect(()=> {
-    if (template) setData(d => ({...d, template}));
-  }, [template]);
+  const isEdit = Boolean(id);
+
+  // 🔹 Load existing portfolio if edit mode
+  useEffect(() => {
+    if (isEdit && id) {
+      (async () => {
+        try {
+          const existing = await fetchPortfolio(id);
+          if (existing) setData(existing);
+        } catch (err) {
+          console.error(err);
+          alert('Failed to load existing portfolio');
+        }
+      })();
+    } else if (template) {
+      setData(d => ({...d, template}));
+    }
+  }, [id, template, isEdit]);
 
   const handleImage = async (e, fieldPath) => {
     const f = e.target.files[0];
@@ -56,11 +79,10 @@ export default function MultiStepForm(){
     const b64 = await readFileAsDataURL(f);
     setData(d => {
       const copy = {...d};
-      // support for profileImage or project image via "projects[index].image"
       const pathParts = fieldPath.split('.');
-      if (pathParts.length===1) copy[fieldPath] = b64;
+      if (pathParts.length === 1) copy[fieldPath] = b64;
       else if (pathParts[0] === 'projects') {
-        const idx = parseInt(pathParts[1],10);
+        const idx = parseInt(pathParts[1], 10);
         copy.projects[idx].image = b64;
       }
       return copy;
@@ -68,38 +90,45 @@ export default function MultiStepForm(){
   };
 
   const addSkill = (txt) => {
-    if(!txt) return;
+    if (!txt) return;
     setData(d => ({...d, skills: [...d.skills, txt]}));
   };
   const removeSkill = (i) => setData(d => ({...d, skills: d.skills.filter((_,idx)=>idx!==i)}));
 
+  // 🔹 Single submit for both create and edit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const created = await createPortfolio(data);
-      alert('Profile created!');
-      nav(`/portfolio/${created.id}`);
-    } catch(err){
+      if (isEdit && data.id) {
+        await updatePortfolio(data.id, data);
+        alert('Profile updated successfully!');
+        nav(`/portfolio/${data.id}`);
+      } else {
+        const created = await createPortfolio(data);
+        alert('Profile created successfully!');
+        nav(`/portfolio/${created.id}`);
+      }
+    } catch (err) {
       console.error(err);
-      alert('Error creating profile');
+      alert('Error saving profile');
     }
-  };
-
-  const handleSaveEdit = async () => {
-    // used to update if editing existing (not implemented full edit flow UI)
-    if (!data.id) { alert('No id'); return; }
-    try {
-      await updatePortfolio(data.id, data);
-      alert('Updated');
-    } catch(err){ console.error(err); alert('Error updating'); }
   };
 
   return (
     <div>
-      <h2>Create your portfolio</h2>
+      <h2>{isEdit ? 'Edit your portfolio' : 'Create your portfolio'}</h2>
+
       <div style={{display:'flex',gap:8,marginBottom:12}}>
         {steps.map((s,i)=>(
-          <div key={s} style={{padding:'6px 10px', borderRadius:8, background: i===step ? '#ffefc1' : '#fff', border:'1px solid #eee'}}>{s}</div>
+          <div key={s}
+            style={{
+              padding:'6px 10px',
+              borderRadius:8,
+              background: i===step ? '#ffefc1' : '#fff',
+              border:'1px solid #eee'
+            }}>
+            {s}
+          </div>
         ))}
       </div>
 
@@ -109,7 +138,12 @@ export default function MultiStepForm(){
           <>
             <div className="form-row">
               <label>Template</label>
-              <select value={data.template} onChange={e=>setData({...data, template:e.target.value})} className="input">
+              <select
+                value={data.template}
+                onChange={e=>setData({...data, template:e.target.value})}
+                className="input"
+                disabled={isEdit} // disable editing template in edit mode
+              >
                 <option value="template1">Template 1 (Yellow)</option>
                 <option value="template2">Template 2 (Split)</option>
               </select>
@@ -155,10 +189,14 @@ export default function MultiStepForm(){
             </div>
             <div className="form-row">
               <label>Socials (comma separated twitter, linkedin, website)</label>
-              <input className="input" defaultValue={`${data.socials.twitter},${data.socials.linkedin},${data.socials.website}`} onBlur={e=>{
-                const [t,l,w] = e.target.value.split(',').map(x=>x?.trim()||'');
-                setData(d=>({...d, socials:{...d.socials, twitter:t, linkedin:l, website:w}}));
-              }} />
+              <input
+                className="input"
+                defaultValue={`${data.socials.twitter},${data.socials.linkedin},${data.socials.website}`}
+                onBlur={e=>{
+                  const [t,l,w] = e.target.value.split(',').map(x=>x?.trim()||'');
+                  setData(d=>({...d, socials:{...d.socials, twitter:t, linkedin:l, website:w}}));
+                }}
+              />
             </div>
           </>
         )}
@@ -213,10 +251,10 @@ export default function MultiStepForm(){
                 <input className="input" placeholder="Project Title" value={p.title} onChange={e=>{
                   const arr = [...data.projects]; arr[i].title = e.target.value; setData({...data, projects:arr});
                 }}/>
-                <input type="file" accept="image/*" onChange={(e)=> {
+                <input type="file" accept="image/*" onChange={(e)=>{
                   (async ()=>{
                     const fr = new FileReader();
-                    fr.onload = ()=> {
+                    fr.onload = ()=>{
                       const arr = [...data.projects];
                       arr[i].image = fr.result;
                       setData({...data, projects:arr});
@@ -281,10 +319,9 @@ export default function MultiStepForm(){
           <div>
             {step < steps.length-1 && <button type="button" className="btn" onClick={()=>setStep(step+1)} style={{marginRight:8}}>Next</button>}
             {step === steps.length-1 ? (
-              <button className="btn" type="submit">Create Portfolio</button>
+              <button className="btn" type="submit">{isEdit ? 'Save Changes' : 'Create Portfolio'}</button>
             ) : (
-              <button type="button" className="btn" onClick={()=> {
-                // quick save draft to API (optional)
+              <button type="button" className="btn" onClick={()=>{
                 alert('Continue to next steps or press Create at final step.');
               }}>Save draft</button>
             )}
